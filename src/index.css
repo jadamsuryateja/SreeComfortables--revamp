@@ -1,0 +1,264 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Wood-themed color palette */
+    --background: 40 33% 98%;
+    --foreground: 25 30% 15%;
+
+    --card: 40 30% 96%;
+    --card-foreground: 25 30% 15%;
+
+    --popover: 40 33% 98%;
+    --popover-foreground: 25 30% 15%;
+
+    /* Light wood - primary */
+    --primary: 30 45% 55%;
+    --primary-foreground: 40 33% 98%;
+
+    /* Dark wood - secondary */
+    --secondary: 25 35% 25%;
+    --secondary-foreground: 40 33% 98%;
+
+    /* Cream muted */
+    --muted: 40 25% 92%;
+    --muted-foreground: 25 20% 45%;
+
+    /* Accent - warm gold */
+    --accent: 38 70% 50%;
+    --accent-foreground: 40 33% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 40 33% 98%;
+
+    --border: 30 20% 85%;
+    --input: 30 20% 85%;
+    --ring: 30 45% 55%;
+
+    --radius: 0.5rem;
+
+    /* Custom design tokens */
+    --wood-light: 35 40% 75%;
+    --wood-medium: 30 45% 55%;
+    --wood-dark: 25 35% 25%;
+    --wood-darkest: 20 30% 15%;
+    --cream: 40 33% 98%;
+    --cream-dark: 38 25% 90%;
+    --gold: 38 70% 50%;
+    --gold-light: 40 60% 65%;
+
+    /* Typography */
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'Inter', sans-serif;
+
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -4px hsl(25 30% 15% / 0.1);
+    --shadow-medium: 0 8px 30px -8px hsl(25 30% 15% / 0.15);
+    --shadow-strong: 0 20px 50px -12px hsl(25 30% 15% / 0.25);
+
+    /* Transitions */
+    --transition-slow: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-medium: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --sidebar-background: 40 30% 96%;
+    --sidebar-foreground: 25 30% 15%;
+    --sidebar-primary: 30 45% 55%;
+    --sidebar-primary-foreground: 40 33% 98%;
+    --sidebar-accent: 38 25% 90%;
+    --sidebar-accent-foreground: 25 30% 15%;
+    --sidebar-border: 30 20% 85%;
+    --sidebar-ring: 30 45% 55%;
+  }
+
+  .dark {
+    --background: 20 30% 8%;
+    --foreground: 40 25% 92%;
+
+    --card: 22 28% 12%;
+    --card-foreground: 40 25% 92%;
+
+    --popover: 20 30% 8%;
+    --popover-foreground: 40 25% 92%;
+
+    --primary: 35 40% 60%;
+    --primary-foreground: 20 30% 8%;
+
+    --secondary: 30 25% 35%;
+    --secondary-foreground: 40 25% 92%;
+
+    --muted: 25 20% 18%;
+    --muted-foreground: 35 15% 55%;
+
+    --accent: 38 65% 55%;
+    --accent-foreground: 20 30% 8%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 40 25% 92%;
+
+    --border: 25 20% 20%;
+    --input: 25 20% 20%;
+    --ring: 35 40% 60%;
+
+    --sidebar-background: 22 28% 12%;
+    --sidebar-foreground: 40 25% 92%;
+    --sidebar-primary: 35 40% 60%;
+    --sidebar-primary-foreground: 20 30% 8%;
+    --sidebar-accent: 25 20% 18%;
+    --sidebar-accent-foreground: 40 25% 92%;
+    --sidebar-border: 25 20% 20%;
+    --sidebar-ring: 35 40% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display;
+  }
+}
+
+@layer components {
+  .text-gradient {
+    @apply bg-gradient-to-r from-wood-dark via-wood-medium to-gold bg-clip-text text-transparent;
+  }
+
+  .section-padding {
+    @apply px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 py-16 md:py-24 lg:py-32;
+  }
+
+  .container-custom {
+    @apply max-w-7xl mx-auto;
+  }
+
+  .hover-lift {
+    @apply transition-all duration-500 hover:-translate-y-2 hover:shadow-strong;
+  }
+
+  .image-overlay {
+    @apply absolute inset-0 bg-gradient-to-t from-wood-darkest/60 via-transparent to-transparent;
+  }
+
+  .nav-link {
+    @apply relative text-foreground/80 hover:text-foreground transition-colors duration-300;
+  }
+
+  .nav-link::after {
+    content: '';
+    @apply absolute left-0 bottom-0 w-0 h-0.5 bg-primary transition-all duration-300;
+  }
+
+  .nav-link:hover::after {
+    @apply w-full;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-primary-foreground px-8 py-4 font-medium tracking-wide uppercase text-sm transition-all duration-300 hover:bg-secondary hover:scale-105;
+  }
+
+  .btn-outline {
+    @apply border-2 border-foreground text-foreground px-8 py-4 font-medium tracking-wide uppercase text-sm transition-all duration-300 hover:bg-foreground hover:text-background;
+  }
+
+  .section-title {
+    @apply font-display text-4xl md:text-5xl lg:text-6xl font-medium leading-tight;
+  }
+
+  .section-subtitle {
+    @apply font-body text-sm uppercase tracking-[0.3em] text-muted-foreground;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/50 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary;
+  }
+
+  /* Smooth scroll */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Selection color */
+  ::selection {
+    @apply bg-primary/30 text-foreground;
+  }
+}
+
+/* Custom Cursor & Premium Utilities */
+@layer components {
+  .glass-panel {
+    @apply bg-white/5 backdrop-blur-lg border border-white/10 shadow-lg;
+  }
+
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 hover:border-gold/30 transition-all duration-500 hover:shadow-strong;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .cursor-hover {
+    @apply cursor-none;
+  }
+}
+
+/* Lenis Recommended CSS */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
