@@ -102,8 +102,16 @@ const HeroSection = () => {
         </div>
 
         {/* Mobile Specific Subtext (since button is hidden on mobile often, or just to add context) */}
-        <div className="lg:hidden absolute bottom-12 left-4 right-4 text-center">
-          <button className="bg-black text-white px-8 py-4 w-full uppercase tracking-widest text-xs font-bold">
+        <div className="lg:hidden absolute bottom-24 left-0 right-0 flex justify-center text-center z-50">
+          <button
+            onClick={() => {
+              const element = document.querySelector('#our-works');
+              if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
+            className="bg-black text-white px-8 py-3 w-auto uppercase tracking-widest text-xs font-bold hover:bg-wood-dark transition-colors"
+          >
             Explore Works
           </button>
         </div>
