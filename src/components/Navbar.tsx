@@ -20,6 +20,13 @@ const Navbar = () => {
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() || 0;
+
+    // Don't hide navbar if menu is open
+    if (isOpen) {
+      setHidden(false);
+      return;
+    }
+
     if (latest > previous && latest > 150) {
       setHidden(true);
     } else {
@@ -36,6 +43,20 @@ const Navbar = () => {
     setIsOpen(false);
   };
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      // Force navbar to be visible and lock scroll
+      setHidden(false);
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   // Determine styles based on state
   const isDarkText = scrolled && !isOpen;
 
@@ -46,13 +67,13 @@ const Navbar = () => {
           visible: { y: 0 },
           hidden: { y: -100 },
         }}
-        animate={hidden ? "hidden" : "visible"}
+        animate={hidden && !isOpen ? "hidden" : "visible"}
         transition={{ duration: 0.35, ease: "easeInOut" }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isOpen
-            ? 'py-6 bg-transparent'
-            : scrolled
-              ? 'py-4 bg-[#FAF9F6]/90 backdrop-blur-md border-b border-black/5 shadow-sm'
-              : 'py-6 bg-gradient-to-b from-[#2A2522]/90 via-[#2A2522]/50 to-transparent'
+          ? 'py-6 bg-transparent'
+          : scrolled
+            ? 'py-4 bg-[#FAF9F6]/90 backdrop-blur-md border-b border-black/5 shadow-sm'
+            : 'py-6 bg-gradient-to-b from-[#2A2522]/90 via-[#2A2522]/50 to-transparent'
           }`}
       >
         <div className="container-custom flex items-center justify-between px-6 lg:px-16">
