@@ -15,17 +15,15 @@ const HeroSection = () => {
     const tl = gsap.timeline();
 
     // Initial Loading Animation
+    // Only animate image scale slightly for effect, but keep opacity 1
     tl.fromTo(imageRef.current,
       { scale: 1.2 },
       { scale: 1, duration: 1.5, ease: 'power2.out' }
-    )
-      .fromTo([text1Ref.current, text2Ref.current],
-        { y: 100, opacity: 0, skewY: 10 },
-        { y: 0, opacity: 1, skewY: 0, duration: 1, stagger: 0.2, ease: 'power3.out' },
-        '<'
-      );
+    );
+    // Text animation is now handled by CSS for instant LCP
 
     // Scroll Parallax
+
     if (containerRef.current) {
       gsap.to(text1Ref.current, {
         xPercent: -20,
@@ -86,7 +84,7 @@ const HeroSection = () => {
         <div className="relative text-center md:text-left">
           <h1
             ref={text1Ref}
-            className="font-display font-medium text-[25vw] md:text-[18vw] leading-[0.8] tracking-tighter text-wood-darkest mix-blend-hard-light"
+            className="font-display font-medium text-[25vw] md:text-[18vw] leading-[0.8] tracking-tighter text-wood-darkest mix-blend-hard-light opacity-0 animate-[fadeUp_1s_ease-out_0.2s_forwards]"
           >
             SREE
           </h1>
@@ -96,7 +94,7 @@ const HeroSection = () => {
         <div className="relative text-center md:text-right mt-2 md:mt-0">
           <h1
             ref={text2Ref}
-            className="font-display font-medium text-[12vw] md:text-[10vw] lg:text-[8.5vw] leading-[0.8] tracking-tighter text-wood-darkest mix-blend-hard-light inline-block whitespace-nowrap"
+            className="font-display font-medium text-[12vw] md:text-[10vw] lg:text-[8.5vw] leading-[0.8] tracking-tighter text-wood-darkest mix-blend-hard-light inline-block whitespace-nowrap opacity-0 animate-[fadeUp_1s_ease-out_0.4s_forwards]"
           >
             COMFORTABLES
           </h1>

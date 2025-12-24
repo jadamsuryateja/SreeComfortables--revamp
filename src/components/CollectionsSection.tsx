@@ -69,10 +69,24 @@ const CollectionsSection = () => {
                                 <motion.div
                                     key={item.id}
                                     // Responsive percentage width to fit all 5 cards
-                                    className="relative flex-shrink-0 w-[90%] md:w-[45%] lg:w-[19%] group cursor-pointer"
+                                    // Update the collections array first (will do in separate edit or same if I can target both)
+                                    // Wait, I can't edit non-contiguous blocks with this tool easily if they are far apart.
+                                    // Lines 9-15 are the array. Lines 73-75 are the usage.
+                                    // I will use `multi_replace_file_content`.
+                                    // Ah, I'll just use `replace_file_content` to fix the usage first using a quick index math if possible or just style with a media query class?
+                                    // No, I'll use multi_replace.
+                                    // Let's assume I use standard replace for the array first.
+                                    // Actually, `item.offset` is used.
+                                    // Any `window.innerWidth` check in render is bad.
+                                    // I can change the style to:
+                                    // style={{ '--lg-margin-top': `${item.offset}px` } as React.CSSProperties}
+                                    // and in className add `lg:mt-[var(--lg-margin-top)]`.
+                                    // This works perfectly and avoids JS window checks.
+                                    // Let's do that.
+                                    className="relative flex-shrink-0 w-[90%] md:w-[45%] lg:w-[19%] group cursor-pointer lg:mt-[var(--offset)]"
                                     style={{
-                                        marginTop: window.innerWidth > 1024 ? `${item.offset}px` : '0px'
-                                    }}
+                                        '--offset': `${item.offset}px`
+                                    } as React.CSSProperties}
                                     variants={{
                                         hidden: { opacity: 0, y: 100 }, // Start lower for dramatic effect
                                         visible: {
