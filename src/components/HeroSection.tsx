@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import hero1 from '@/assets/hero-1.jpg';
+import hero1 from '@/assets/hero-1.webp';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,13 +16,13 @@ const HeroSection = () => {
 
     // Initial Loading Animation
     tl.fromTo(imageRef.current,
-      { scale: 1.2, opacity: 0 },
-      { scale: 1, opacity: 1, duration: 1.5, ease: 'power2.out' }
+      { scale: 1.2 },
+      { scale: 1, duration: 1.5, ease: 'power2.out' }
     )
       .fromTo([text1Ref.current, text2Ref.current],
         { y: 100, opacity: 0, skewY: 10 },
         { y: 0, opacity: 1, skewY: 0, duration: 1, stagger: 0.2, ease: 'power3.out' },
-        '-=1'
+        '<'
       );
 
     // Scroll Parallax
@@ -69,8 +69,9 @@ const HeroSection = () => {
       <div className="absolute inset-0 z-0 select-none pointer-events-none">
         <div ref={imageRef} className="w-full h-full relative">
           <img
-            src={hero1}
+            src="/hero-1.webp"
             alt="Interior Design"
+            fetchPriority="high"
             className="w-full h-full object-cover opacity-90" // High opacity for that bright look
           />
           {/* Subtle white gradient overlay to ensure text readability if needed, matches reference 'bright' look */}
