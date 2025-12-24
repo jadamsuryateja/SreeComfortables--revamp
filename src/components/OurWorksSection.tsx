@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 
 const projects = [
@@ -51,9 +51,70 @@ const projects = [
     { id: 42, title: "Master Bedroom", category: "Residential", image: "/residential/MASTER BEDROOM.JPG" },
 ];
 
+const projectVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: (index: number) => ({
+        opacity: 1,
+        y: 0,
+        transition: {
+            delay: index * 0.5,
+            duration: 0.6,
+            ease: "easeOut" as "easeOut"
+        }
+    })
+};
+
+const ProjectCard = ({ project, index, setSelectedImage }: { project: any, index: number, setSelectedImage: (img: string) => void }) => {
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    // Generate small image path: /path/to/image.jpg -> /path/to/image.small.jpg
+    const smallImage = project.image.replace(/(\.[^.]+)$/, '.small$1');
+
+    return (
+        <motion.div
+            layout
+            custom={index}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+            variants={projectVariants}
+            className="group cursor-pointer will-change-transform"
+            onClick={() => setSelectedImage(project.image)}
+        >
+            <div className="relative overflow-hidden rounded-lg mb-4 aspect-[4/3] bg-muted/10">
+                {/* Low Quality Placeholder (Always visible, behind) */}
+                <img
+                    src={smallImage}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute inset-0 w-full h-full object-cover blur-xl scale-110"
+                />
+
+                {/* Full Quality Image (Fades in) */}
+                <img
+                    src={project.image}
+                    alt={project.title}
+                    className={`relative z-10 w-full h-full object-cover transition-opacity duration-700 ease-in-out group-hover:scale-105 ${!isLoaded ? 'opacity-0' : 'opacity-100'
+                        }`}
+                    loading="lazy"
+                    decoding="async"
+                    onLoad={() => setIsLoaded(true)}
+                />
+            </div>
+            <div className="flex justify-between items-center border-b border-black/10 pb-4">
+                <h3 className="font-display text-2xl text-foreground">{project.title}</h3>
+                <span className="text-sm font-bold uppercase tracking-widest text-gold text-right">
+                    {project.category}
+                </span>
+            </div>
+        </motion.div>
+    );
+};
+
 const OurWorksSection = () => {
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 8;
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const itemsPerPage = 6;
     const totalPages = Math.ceil(projects.length / itemsPerPage);
 
     const displayedProjects = projects.slice(
@@ -64,14 +125,14 @@ const OurWorksSection = () => {
     const handlePageChange = (newPage: number) => {
         if (newPage >= 1 && newPage <= totalPages) {
             setCurrentPage(newPage);
-            // Optional: Scroll to top of section when changing pages
+            // Scroll to top of section when changing pages
             const section = document.getElementById('our-works');
-            if (section) section.scrollIntoView({ behavior: 'smooth' });
+            if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     };
 
     return (
-        <section id="our-works" className="py-24 bg-background">
+        <section id="our-works" className="py-24 bg-background relative">
             <div className="container-custom px-4 lg:px-6">
                 <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-16 text-center md:text-left">
                     <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground uppercase">
@@ -84,31 +145,12 @@ const OurWorksSection = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
                     {displayedProjects.map((project, index) => (
-                        <motion.div
+                        <ProjectCard
                             key={project.id}
-                            layout
-                            initial={{ opacity: 0, y: 30 }} // Reduced movement distance
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-50px" }} // Trigger earlier/later appropriately
-                            transition={{ duration: 0.5, ease: "easeOut" }} // Simplified transition
-                            className="group cursor-pointer will-change-transform"
-                        >
-                            <div className="overflow-hidden rounded-lg mb-4 aspect-[4/3] bg-gray-100"> {/* Added placeholder bg */}
-                                <img
-                                    src={project.image}
-                                    alt={project.title}
-                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" // Reduced scale duration and amount
-                                    loading="lazy"
-                                    decoding="async"
-                                />
-                            </div>
-                            <div className="flex justify-between items-center border-b border-black/10 pb-4">
-                                <h3 className="font-display text-2xl text-foreground">{project.title}</h3>
-                                <span className="text-sm font-bold uppercase tracking-widest text-gold text-right">
-                                    {project.category}
-                                </span>
-                            </div>
-                        </motion.div>
+                            project={project}
+                            index={index}
+                            setSelectedImage={setSelectedImage}
+                        />
                     ))}
                 </div>
 
@@ -137,6 +179,37 @@ const OurWorksSection = () => {
                     </button>
                 </div>
             </div>
+
+            {/* Image Preview Modal */}
+            <AnimatePresence>
+                {selectedImage && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4 md:p-12 cursor-zoom-out"
+                        onClick={() => setSelectedImage(null)}
+                    >
+                        <motion.div
+                            layoutId={selectedImage}
+                            className="relative max-w-full max-h-full rounded-lg overflow-hidden shadow-2xl"
+                            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking content
+                        >
+                            <img
+                                src={selectedImage}
+                                alt="Preview"
+                                className="max-w-full max-h-[85vh] object-contain"
+                            />
+                            <button
+                                className="absolute top-4 right-4 bg-black/50 hover:bg-black/80 text-white rounded-full p-2 transition-colors"
+                                onClick={() => setSelectedImage(null)}
+                            >
+                                <X size={24} />
+                            </button>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </section>
     );
 };

@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Skeleton } from "@/components/ui/skeleton";
 import hero1 from '@/assets/hero-1.jpg';
 import hero2 from '@/assets/hero-2.jpg';
 import project2 from '@/assets/project-2.jpg';
@@ -13,6 +15,12 @@ const collections = [
 ];
 
 const CollectionsSection = () => {
+    const [imagesLoaded, setImagesLoaded] = useState<Record<number, boolean>>({});
+
+    const handleImageLoad = (id: number) => {
+        setImagesLoaded(prev => ({ ...prev, [id]: true }));
+    };
+
     return (
         <section className="py-24 bg-background relative overflow-hidden">
 
@@ -77,11 +85,15 @@ const CollectionsSection = () => {
                                         }
                                     }}
                                 >
-                                    <div className="aspect-[3/5] overflow-hidden rounded-md mb-6 bg-white shadow-lg border border-black/5">
+                                    <div className="relative aspect-[3/5] overflow-hidden rounded-md mb-6 bg-white shadow-lg border border-black/5">
+                                        {!imagesLoaded[item.id] && (
+                                            <Skeleton className="absolute inset-0 w-full h-full" />
+                                        )}
                                         <img
                                             src={item.image}
                                             alt={item.title}
-                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                            className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${!imagesLoaded[item.id] ? 'opacity-0' : 'opacity-100'}`}
+                                            onLoad={() => handleImageLoad(item.id)}
                                         />
                                     </div>
                                     <h3 className="text-center font-display text-sm tracking-[0.2em] uppercase text-wood-darkest font-bold group-hover:text-gold transition-colors">{item.title}</h3>

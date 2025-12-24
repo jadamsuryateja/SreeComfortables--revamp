@@ -109,26 +109,38 @@ const ParallaxText = React.memo(({ children, baseVelocity = 100 }: { children: R
   );
 });
 
+import { Skeleton } from "@/components/ui/skeleton";
+
 const allWorks = [...works.slice(0, 8), ...works2.slice(0, 8)]; // Reduce initial load size slightly if possible, or keep full list but optimize rendering
+
+const TestimonialItem = ({ work, onClick }: { work: { id: number; title: string; image: string }; onClick: () => void }) => {
+  const [isLoaded, setIsLoaded] = React.useState(false);
+
+  return (
+    <div
+      className="inline-block w-[300px] md:w-[400px] aspect-[4/3] relative group overflow-hidden rounded-lg mx-4 cursor-pointer bg-gray-100"
+      onClick={onClick}
+    >
+      {!isLoaded && <Skeleton className="absolute inset-0 w-full h-full" />}
+      <img
+        src={work.image}
+        alt={work.title}
+        className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${!isLoaded ? "opacity-0" : "opacity-100"
+          }`}
+        loading="lazy"
+        decoding="async"
+        onLoad={() => setIsLoaded(true)}
+      />
+    </div>
+  );
+};
 
 const TestimonialsSection = () => {
   const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
 
   // 4. Memoize the works list rendering
   const worksList = React.useMemo(() => allWorks.map((work, i) => (
-    <div
-      key={i}
-      className="inline-block w-[300px] md:w-[400px] aspect-[4/3] relative group overflow-hidden rounded-lg mx-4 cursor-pointer"
-      onClick={() => setSelectedImage(work.image)}
-    >
-      <img
-        src={work.image}
-        alt={work.title}
-        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-        loading="lazy"
-        decoding="async" // 5. Async decoding
-      />
-    </div>
+    <TestimonialItem key={i} work={work} onClick={() => setSelectedImage(work.image)} />
   )), []);
 
   return (
