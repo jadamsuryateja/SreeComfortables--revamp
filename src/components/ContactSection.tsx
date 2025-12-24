@@ -23,9 +23,9 @@ const ContactSection = () => {
 
         {/* Header */}
         <div className="text-center mb-16">
-          <p className="text-[#C5A572] uppercase tracking-[0.2em] text-xs font-bold mb-4">Contact Us</p>
+          <p className="text-[#997B44] uppercase tracking-[0.2em] text-xs font-bold mb-4">Contact Us</p>
           <h2 className="font-display text-5xl md:text-6xl text-[#2A2522] mb-4">
-            Get In <span className="text-[#C5A572]">Touch</span>
+            Get In <span className="text-[#997B44]">Touch</span>
           </h2>
           <p className="text-gray-500 font-sans text-lg">We'd love to hear from you. Let's start a conversation.</p>
         </div>

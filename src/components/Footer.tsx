@@ -22,8 +22,8 @@ const Footer = () => {
             </p>
           </div>
           <div>
-            <h4 className="text-gold uppercase tracking-widest text-sm mb-6">Sitemap</h4>
-            <ul className="space-y-4 text-white/60">
+            <h4 className="text-[#997B44] uppercase tracking-widest text-sm mb-6">Sitemap</h4>
+            <ul className="space-y-4 text-white/80">
               <li><a href="#home" className="hover:text-white transition-colors">Home</a></li>
               <li><a href="#about" className="hover:text-white transition-colors">About</a></li>
               <li><a href="#our-works" className="hover:text-white transition-colors">Projects</a></li>
@@ -32,8 +32,8 @@ const Footer = () => {
           </div>
           <div className="flex flex-col justify-between">
             <div>
-              <h4 className="text-gold uppercase tracking-widest text-sm mb-6">Socials</h4>
-              <ul className="space-y-4 text-white/60">
+              <h4 className="text-[#997B44] uppercase tracking-widest text-sm mb-6">Socials</h4>
+              <ul className="space-y-4 text-white/80">
                 <li><a href="#" className="hover:text-white transition-colors">Instagram</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">LinkedIn</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Pinterest</a></li>
@@ -41,7 +41,8 @@ const Footer = () => {
             </div>
             <button
               onClick={scrollToTop}
-              className="mt-8 self-start md:self-end w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-gold hover:text-wood-darkest ruber:border-gold transition-all duration-300"
+              className="mt-8 self-start md:self-end w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-[#997B44] hover:text-wood-darkest ruber:border-[#997B44] transition-all duration-300"
+              aria-label="Scroll to top"
             >
               <ArrowUp size={20} />
             </button>

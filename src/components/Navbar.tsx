@@ -120,6 +120,7 @@ const Navbar = () => {
           <button
             className={`lg:hidden relative z-50 p-2 transition-colors duration-300 ${isDarkText ? 'text-wood-darkest' : 'text-white'}`}
             onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle menu"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
