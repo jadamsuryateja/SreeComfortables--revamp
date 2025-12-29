@@ -1,7 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import hero1 from '@/assets/hero-1.webp';
 
 gsap.registerPlugin(ScrollTrigger);
 
