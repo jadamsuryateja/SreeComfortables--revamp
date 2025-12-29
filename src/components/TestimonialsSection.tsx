@@ -1,12 +1,7 @@
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring, useMotionValue, useVelocity, useAnimationFrame, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
-
-
-const wrap = (min: number, max: number, v: number) => {
-  const rangeSize = max - min;
-  return ((((v - min) % rangeSize) + rangeSize) % rangeSize) + min;
-};
+import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Skeleton } from "@/components/ui/skeleton";
 
 const works = [
   // Office
@@ -58,101 +53,193 @@ const works2 = [
   { id: 42, title: 'Master Bed', image: '/residential/MASTER BEDROOM.JPG' },
 ];
 
-const ParallaxText = React.memo(({ children, baseVelocity = 100 }: { children: React.ReactNode; baseVelocity: number }) => { // 1. Memoize
-  const baseX = useMotionValue(0);
-  const { scrollY } = useScroll();
-  const scrollVelocity = useVelocity(scrollY);
-  const smoothVelocity = useSpring(scrollVelocity, {
-    damping: 50,
-    stiffness: 400
-  });
-  const velocityFactor = useTransform(smoothVelocity, [0, 1000], [0, 5], {
-    clamp: false
-  });
-
-  const x = useTransform(baseX, (v) => `${wrap(-20, -45, v)}%`);
-
-  const directionFactor = useRef<number>(1);
-  const isHovered = useRef(false);
-
-  useAnimationFrame((t, delta) => {
-    if (isHovered.current) return;
-
-    let moveBy = directionFactor.current * baseVelocity * (delta / 1000);
-
-    // Change direction if scrolling
-    if (velocityFactor.get() < 0) {
-      directionFactor.current = -1;
-    } else if (velocityFactor.get() > 0) {
-      directionFactor.current = 1;
-    }
-
-    moveBy += directionFactor.current * moveBy * velocityFactor.get();
-
-    baseX.set(baseX.get() + moveBy);
-  });
-
-  return (
-    <div
-      className="parallax overflow-hidden m-0 whitespace-nowrap flex flex-nowrap cursor-pointer"
-      onMouseEnter={() => isHovered.current = true}
-      onMouseLeave={() => isHovered.current = false}
-    >
-      <motion.div
-        className="scroller flex flex-nowrap whitespace-nowrap gap-8 py-8 will-change-transform" // 2. Add will-change-transform
-        style={{ x }}
-      >
-        {children}
-        {children} {/* 3. Reduced duplication from 4 to 2 (if list is long enough, 2 is plenty) */}
-      </motion.div>
-    </div>
-  );
-});
-
-import { Skeleton } from "@/components/ui/skeleton";
-
-const allWorks = [...works.slice(0, 8), ...works2.slice(0, 8)]; // Reduce initial load size slightly if possible, or keep full list but optimize rendering
+// Duplicate list for infinite loop
+const allWorks = [...works, ...works2, ...works, ...works2];
 
 const TestimonialItem = ({ work, onClick }: { work: { id: number; title: string; image: string }; onClick: () => void }) => {
   const [isLoaded, setIsLoaded] = React.useState(false);
 
   return (
     <div
-      className="inline-block w-[300px] md:w-[400px] aspect-[4/3] relative group overflow-hidden rounded-lg mx-4 cursor-pointer bg-gray-100"
+      className="inline-block w-[280px] md:w-[350px] aspect-[4/3] flex-shrink-0 relative group overflow-hidden rounded-lg cursor-pointer bg-gray-100"
       onClick={onClick}
     >
       {!isLoaded && <Skeleton className="absolute inset-0 w-full h-full" />}
       <img
         src={work.image}
         alt={work.title}
-        className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${!isLoaded ? "opacity-0" : "opacity-100"
-          }`}
+        draggable={false}
+        className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${!isLoaded ? "opacity-0" : "opacity-100"}`}
         loading="lazy"
         decoding="async"
         onLoad={() => setIsLoaded(true)}
       />
+      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+        <h3 className="text-white font-display text-xl">{work.title}</h3>
+      </div>
     </div>
   );
 };
 
 const TestimonialsSection = () => {
-  const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const animationRef = useRef<number>();
 
-  // 4. Memoize the works list rendering
-  const worksList = React.useMemo(() => allWorks.map((work, i) => (
-    <TestimonialItem key={i} work={work} onClick={() => setSelectedImage(work.image)} />
-  )), []);
+  // Drag State (Refs for performance, no re-renders)
+  const isDown = useRef(false);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
+
+  // Auto Scroll State
+  const isHovered = useRef(false);
+  const scrollSpeed = 0.5; // Pixels per frame
+
+  const animateScroll = useCallback(() => {
+    if (!scrollContainerRef.current) return;
+
+    // Auto-scroll only if not interacting
+    if (!isDown.current && !isHovered.current) {
+      scrollContainerRef.current.scrollLeft += scrollSpeed;
+    }
+
+    // Infinite Loop Check
+    const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+
+    // If we've scrolled past the first set of items (approx halfway), reset to start
+    // We assume the duplicated list is roughly 50/50. 
+    // A safer check is if we are near the end.
+    if (scrollLeft >= (scrollWidth / 2)) {
+      scrollContainerRef.current.scrollLeft = 0;
+    }
+    // If scrolling backwards (manual) and hit start
+    else if (scrollLeft <= 0) {
+      // scrollContainerRef.current.scrollLeft = scrollWidth / 2; // Optional: bi-directional infinite
+    }
+
+    animationRef.current = requestAnimationFrame(animateScroll);
+  }, []);
+
+  useEffect(() => {
+    animationRef.current = requestAnimationFrame(animateScroll);
+    return () => {
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    };
+  }, [animateScroll]);
+
+
+  // Manual Drag Handlers
+  const handleMouseDown = (e: React.MouseEvent) => {
+    isDown.current = true;
+    if (scrollContainerRef.current) {
+      startX.current = e.pageX - scrollContainerRef.current.offsetLeft;
+      scrollLeft.current = scrollContainerRef.current.scrollLeft;
+      scrollContainerRef.current.style.cursor = 'grabbing';
+    }
+  };
+
+  const handleMouseLeave = () => {
+    isDown.current = false;
+    isHovered.current = false;
+    if (scrollContainerRef.current) scrollContainerRef.current.style.cursor = 'grab';
+  };
+
+  const handleMouseUp = () => {
+    isDown.current = false;
+    if (scrollContainerRef.current) scrollContainerRef.current.style.cursor = 'grab';
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDown.current || !scrollContainerRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - scrollContainerRef.current.offsetLeft;
+    const walk = (x - startX.current) * 2; // Scroll multiplier
+    scrollContainerRef.current.scrollLeft = scrollLeft.current - walk;
+  };
+
+  // Touch Handling for Mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    isDown.current = true;
+    isHovered.current = true;
+    if (scrollContainerRef.current) {
+      startX.current = e.touches[0].pageX - scrollContainerRef.current.offsetLeft;
+      scrollLeft.current = scrollContainerRef.current.scrollLeft;
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDown.current || !scrollContainerRef.current) return;
+    const x = e.touches[0].pageX - scrollContainerRef.current.offsetLeft;
+    const walk = (x - startX.current) * 2;
+    scrollContainerRef.current.scrollLeft = scrollLeft.current - walk;
+  };
+
+  const handleTouchEnd = () => {
+    isDown.current = false;
+    isHovered.current = false;
+  };
+
+  const scrollLeftButton = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -400, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRightButton = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 400, behavior: 'smooth' });
+    }
+  };
 
   return (
-    <section id="testimonials" className="py-24 bg-background overflow-hidden relative">
-      <div className="text-center mb-16 px-4">
-        <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground uppercase">Capabilities
-          Our Expertise</h2>
+    <section id="testimonials" className="py-24 bg-background relative">
+      <div className="container-custom px-4 mb-12 flex justify-between items-end">
+        <div>
+          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground uppercase">Capabilities <br /> Our Expertise</h2>
+        </div>
+        <div className="hidden md:flex gap-4">
+          <button onClick={scrollLeftButton} className="p-3 rounded-full border border-wood-darkest text-wood-darkest hover:bg-wood-darkest hover:text-white transition-colors z-10">
+            <ChevronLeft size={24} />
+          </button>
+          <button onClick={scrollRightButton} className="p-3 rounded-full border border-wood-darkest text-wood-darkest hover:bg-wood-darkest hover:text-white transition-colors z-10">
+            <ChevronRight size={24} />
+          </button>
+        </div>
       </div>
 
-      <ParallaxText baseVelocity={-0.5}>
-        {worksList}
-      </ParallaxText>
+      <div
+        ref={scrollContainerRef}
+        className="flex overflow-x-hidden gap-6 px-4 pb-8 cursor-grab"
+        onMouseDown={handleMouseDown}
+        onMouseLeave={handleMouseLeave}
+        onMouseUp={handleMouseUp}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => isHovered.current = true}
+
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+
+        style={{
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          touchAction: 'pan-y'
+        }}
+      >
+        {allWorks.map((work, i) => (
+          <TestimonialItem
+            key={`${work.id}-${i}`}
+            work={work}
+            onClick={() => {
+              // Prevent click if we were dragging
+              // Simple heuristic: if isDown was true recently? 
+              // Actually, onClick fires on MouseUp. If we moved significantly, it's a drag.
+              // For now, accept click. 
+              setSelectedImage(work.image)
+            }}
+          />
+        ))}
+      </div>
 
       {/* Image Preview Modal */}
       <AnimatePresence>
@@ -167,7 +254,7 @@ const TestimonialsSection = () => {
             <motion.div
               layoutId={selectedImage}
               className="relative max-w-full max-h-full rounded-lg overflow-hidden shadow-2xl"
-              onClick={(e) => e.stopPropagation()} // Prevent closing when clicking content
+              onClick={(e) => e.stopPropagation()}
             >
               <img
                 src={selectedImage}

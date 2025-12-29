@@ -1,28 +1,42 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Skeleton } from "@/components/ui/skeleton";
-import hero1 from '@/assets/hero-1.jpg';
-import hero2 from '@/assets/hero-2.jpg';
-import project2 from '@/assets/project-2.jpg';
-import project3 from '@/assets/project-3.jpg';
-
 const collections = [
-    { id: 1, title: 'LIVING', image: hero1, offset: 0 },
-    { id: 2, title: 'BEDROOM', image: hero2, offset: 80 },
-    { id: 3, title: 'DINING', image: project2, offset: 160 },
-    { id: 4, title: 'KITCHEN', image: project3, offset: 240 },
-    { id: 5, title: 'ACCENT', image: hero1, offset: 320 },
+    { id: 1, title: 'LIVING', image: "/residential/GROND FLOOR DRAWING ROOM.JPG", offset: 0 },
+    { id: 2, title: 'BEDROOM', image: "/residential/MASTER BEDROOM.JPG", offset: 80 },
+    { id: 3, title: 'DINING', image: "/residential/LIVING AND DINNING.JPG", offset: 160 },
+    { id: 4, title: 'KITCHEN', image: "/residential/KITCHEN -2.JPG", offset: 240 },
+    { id: 5, title: 'OFFICE', image: "/office/20200104-DSC09999.jpg", offset: 320 },
 ];
 
-const CollectionsSection = () => {
+const CollectionsSection = ({ onCategorySelect }: { onCategorySelect: (category: string) => void }) => {
     const [imagesLoaded, setImagesLoaded] = useState<Record<number, boolean>>({});
 
     const handleImageLoad = (id: number) => {
         setImagesLoaded(prev => ({ ...prev, [id]: true }));
     };
 
+    const handleCollectionClick = (category: string) => {
+        onCategorySelect(category);
+        // Scroll to the Our Works gallery section with a slight delay to allow state update
+        setTimeout(() => {
+            const gallerySection = document.getElementById('our-works-gallery');
+            if (gallerySection) {
+                const navHeight = 0; // Adjust if you have a fixed header that overlaps
+                const elementPosition = gallerySection.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+
+                // Try standard scroll first as it handles Layout better with smooth behavior sometimes
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
+            }
+        }, 100);
+    };
+
     return (
-        <section className="py-24 bg-background relative overflow-hidden">
+        <section id="our-works" className="py-24 bg-background relative overflow-hidden">
 
             {/* Vertical Strip */}
             <div className="hidden lg:flex absolute left-0 top-0 bottom-0 w-24 bg-[#FAF9F6] items-center justify-center border-r border-gray-100 z-10">
@@ -84,6 +98,7 @@ const CollectionsSection = () => {
                                             }
                                         }
                                     }}
+                                    onClick={() => handleCollectionClick(item.title)}
                                 >
                                     <div className="relative aspect-[3/5] overflow-hidden rounded-md mb-6 bg-white shadow-lg border border-black/5">
                                         {!imagesLoaded[item.id] && (

@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 
@@ -12,6 +12,8 @@ const ContactSection = lazy(() => import('@/components/ContactSection'));
 const Footer = lazy(() => import('@/components/Footer'));
 
 const Index = () => {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
   return (
     <main className="relative">
       <Navbar />
@@ -20,8 +22,8 @@ const Index = () => {
       <Suspense fallback={<div className="h-20 bg-cream" />}>
         <AboutSection />
         <TestimonialsSection />
-        <CollectionsSection />
-        <OurWorksSection />
+        <CollectionsSection onCategorySelect={setSelectedCategory} />
+        <OurWorksSection selectedCategory={selectedCategory} />
         <CTASection />
         <ContactSection />
         <Footer />

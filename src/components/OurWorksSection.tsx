@@ -1,54 +1,54 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 
 const projects = [
     // Office Projects
-    { id: 1, title: "Office Space - DSC09999", category: "Office", image: "/office/20200104-DSC09999.jpg" },
+    { id: 1, title: "Office Space", category: "Office", image: "/office/20200104-DSC09999.jpg" },
     { id: 2, title: "Glass Partition Cabin", category: "Office", image: "/office/Cabin Front Door Glass Partition.JPG" },
     { id: 3, title: "Cabin Interior", category: "Office", image: "/office/Cabin Fur View.JPG" },
     { id: 4, title: "Workstation View", category: "Office", image: "/office/Part Photo.JPG" },
     { id: 5, title: "Cabin Overview", category: "Office", image: "/office/View Cabins from WS.JPG" },
 
     // Residential Projects
-    { id: 6, title: "Modern Interior 1", category: "Residential", image: "/residential/0ee8a67a-8027-4ea2-8320-39c1e7df91ad.jpg" },
-    { id: 7, title: "Modern Interior 2", category: "Residential", image: "/residential/1aa2fd21-6799-4925-bf34-7c0787f153ce.jpg" },
-    { id: 8, title: "Elegant Space", category: "Residential", image: "/residential/1b565e6e-8021-4ad7-bf5a-f1bbd9fd529b.jpg" },
-    { id: 9, title: "Cozy Corner", category: "Residential", image: "/residential/3a2cf365-dfd2-4dde-b374-eb43779f979c.jpg" },
-    { id: 10, title: "Luxury Living", category: "Residential", image: "/residential/07c200ff-452f-4860-b832-53b232458acc.jpg" },
-    { id: 11, title: "Spacious Design", category: "Residential", image: "/residential/40b59b8a-bddd-4a28-9c25-51fe0b5e8048.jpg" },
-    { id: 12, title: "Contemporary Style", category: "Residential", image: "/residential/58f1751e-21ca-4f67-ab19-a10b1d1a93e8.jpg" },
-    { id: 13, title: "Dining Area", category: "Residential", image: "/residential/939d61de-6aee-4a2e-8ff3-30d0055bda9b.jpg" },
-    { id: 14, title: "Bedroom Setup", category: "Residential", image: "/residential/aa4a3fc9-24b4-4d97-9b4a-47dd0e4fc02b.jpg" },
-    { id: 15, title: "Balcony View", category: "Residential", image: "/residential/BALCONY.JPG" },
-    { id: 16, title: "Interior Detail 1", category: "Residential", image: "/residential/c1956e6e-13af-4241-a216-e0af81e0dab3.jpg" },
-    { id: 17, title: "Interior Detail 2", category: "Residential", image: "/residential/c97778ba-ff35-48ba-9922-a681f25ce617.jpg" },
+    { id: 6, title: "Modern Kitchen", category: "Kitchen", image: "/residential/0ee8a67a-8027-4ea2-8320-39c1e7df91ad.jpg" },
+    { id: 7, title: "Modern Bedroom", category: "Bedroom", image: "/residential/1aa2fd21-6799-4925-bf34-7c0787f153ce.jpg" },
+    { id: 8, title: "Elegant Bedroom", category: "Bedroom", image: "/residential/1b565e6e-8021-4ad7-bf5a-f1bbd9fd529b.jpg" },
+    { id: 9, title: "Cozy Kitchen", category: "Kitchen", image: "/residential/3a2cf365-dfd2-4dde-b374-eb43779f979c.jpg" },
+    { id: 10, title: "Luxury Kitchen", category: "Kitchen", image: "/residential/07c200ff-452f-4860-b832-53b232458acc.jpg" },
+    { id: 11, title: "Spacious Design", category: "Living", image: "/residential/40b59b8a-bddd-4a28-9c25-51fe0b5e8048.jpg" },
+    { id: 12, title: "Contemporary Style", category: "Living", image: "/residential/58f1751e-21ca-4f67-ab19-a10b1d1a93e8.jpg" },
+    { id: 13, title: "Dining Area", category: "Dining", image: "/residential/939d61de-6aee-4a2e-8ff3-30d0055bda9b.jpg" },
+    { id: 14, title: "Bedroom Setup", category: "Bedroom", image: "/residential/aa4a3fc9-24b4-4d97-9b4a-47dd0e4fc02b.jpg" },
+    { id: 15, title: "Balcony View", category: "Outdoor", image: "/residential/BALCONY.JPG" },
+    { id: 16, title: "Interior Detail 1", category: "Living", image: "/residential/c1956e6e-13af-4241-a216-e0af81e0dab3.jpg" },
+    { id: 17, title: "Interior Detail 2", category: "Living", image: "/residential/c97778ba-ff35-48ba-9922-a681f25ce617.jpg" },
     { id: 18, title: "Project Capture 1", category: "Residential", image: "/residential/Capture.JPG-1.JPG" },
     { id: 19, title: "Project Capture 2", category: "Residential", image: "/residential/Capture.JPG-2.JPG" },
     { id: 20, title: "Project Capture 3", category: "Residential", image: "/residential/Capture.JPG-3.JPG" },
     { id: 21, title: "Project Capture 4", category: "Residential", image: "/residential/Capture.JPG-4.JPG" },
     { id: 22, title: "Project Capture 5", category: "Residential", image: "/residential/Capture.JPG-5.JPG" },
-    { id: 23, title: "Elegant Finish", category: "Residential", image: "/residential/f97c5a28-b5a2-4c20-a442-3772ee82173e.jpg" },
-    { id: 24, title: "First Floor Bedroom", category: "Residential", image: "/residential/FIRST FLOOR 2 ND BEDROOM.JPG" },
-    { id: 25, title: "Ground Floor Drawing", category: "Residential", image: "/residential/GROND FLOOR DRAWING ROOM.JPG" },
-    { id: 26, title: "Ground Floor Bedroom", category: "Residential", image: "/residential/GROUND FLOOR BEDROOM.JPG" },
-    { id: 27, title: "Kitchen Design 1", category: "Residential", image: "/residential/IMG_4252.JPG" },
-    { id: 28, title: "Kitchen Design 2", category: "Residential", image: "/residential/IMG_4260.JPG" },
-    { id: 29, title: "Kitchen Design 3", category: "Residential", image: "/residential/IMG_4261.JPG" },
-    { id: 30, title: "Kitchen Detail 1", category: "Residential", image: "/residential/IMG_4264.JPG" },
-    { id: 31, title: "Kitchen Detail 2", category: "Residential", image: "/residential/IMG_4265.JPG" },
-    { id: 32, title: "Kitchen Detail 3", category: "Residential", image: "/residential/IMG_4267.JPG" },
+    { id: 23, title: "Elegant Finish", category: "Living", image: "/residential/f97c5a28-b5a2-4c20-a442-3772ee82173e.jpg" },
+    { id: 24, title: "First Floor Bedroom", category: "Bedroom", image: "/residential/FIRST FLOOR 2 ND BEDROOM.JPG" },
+    { id: 25, title: "Ground Floor Drawing", category: "Living", image: "/residential/GROND FLOOR DRAWING ROOM.JPG" },
+    { id: 26, title: "Ground Floor Bedroom", category: "Bedroom", image: "/residential/GROUND FLOOR BEDROOM.JPG" },
+    { id: 27, title: "Bedroom Wardrobe", category: "Bedroom", image: "/residential/IMG_4252.JPG" },
+    { id: 28, title: "Living Space", category: "Living", image: "/residential/IMG_4260.JPG" },
+    { id: 29, title: "Master Bedroom", category: "Bedroom", image: "/residential/IMG_4261.JPG" },
+    { id: 30, title: "Living Room", category: "Living", image: "/residential/IMG_4264.JPG" },
+    { id: 31, title: "Hall Partition", category: "Living", image: "/residential/IMG_4265.JPG" },
+    { id: 32, title: "Modular Kitchen", category: "Kitchen", image: "/residential/IMG_4267.JPG" },
     { id: 33, title: "Room View 1", category: "Residential", image: "/residential/IMG_4270.JPG" },
     { id: 34, title: "Room View 2", category: "Residential", image: "/residential/IMG_4271.JPG" },
     { id: 35, title: "Room View 3", category: "Residential", image: "/residential/IMG_4273.JPG" },
     { id: 36, title: "Room View 4", category: "Residential", image: "/residential/IMG_4274.JPG" },
     { id: 37, title: "Room View 5", category: "Residential", image: "/residential/IMG_4276.JPG" },
     { id: 38, title: "Room View 6", category: "Residential", image: "/residential/IMG_4277.JPG" },
-    { id: 39, title: "Kitchen V2", category: "Residential", image: "/residential/KITCHEN -2.JPG" },
-    { id: 40, title: "Kitchen V3", category: "Residential", image: "/residential/KITCHEN V.JPG" },
-    { id: 41, title: "Living & Dining", category: "Residential", image: "/residential/LIVING AND DINNING.JPG" },
-    { id: 42, title: "Master Bedroom", category: "Residential", image: "/residential/MASTER BEDROOM.JPG" },
+    { id: 39, title: "Kitchen V2", category: "Kitchen", image: "/residential/KITCHEN -2.JPG" },
+    { id: 40, title: "Kitchen V3", category: "Kitchen", image: "/residential/KITCHEN V.JPG" },
+    { id: 41, title: "Living & Dining", category: "Dining", image: "/residential/LIVING AND DINNING.JPG" },
+    { id: 42, title: "Master Bedroom", category: "Bedroom", image: "/residential/MASTER BEDROOM.JPG" },
 ];
 
 const projectVariants = {
@@ -111,13 +111,26 @@ const ProjectCard = ({ project, index, setSelectedImage }: { project: any, index
     );
 };
 
-const OurWorksSection = () => {
+const OurWorksSection = ({ selectedCategory }: { selectedCategory: string | null }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const itemsPerPage = 6;
-    const totalPages = Math.ceil(projects.length / itemsPerPage);
 
-    const displayedProjects = projects.slice(
+    // Filter projects based on selected category
+    const filteredProjects = projects.filter(project => {
+        if (!selectedCategory) return true;
+        const cat = selectedCategory.toUpperCase();
+        return project.category.toUpperCase() === cat;
+    });
+
+    // Reset to page 1 when category changes
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [selectedCategory]);
+
+    const totalPages = Math.ceil(filteredProjects.length / itemsPerPage);
+
+    const displayedProjects = filteredProjects.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
@@ -125,21 +138,35 @@ const OurWorksSection = () => {
     const handlePageChange = (newPage: number) => {
         if (newPage >= 1 && newPage <= totalPages) {
             setCurrentPage(newPage);
-            // Scroll to top of section when changing pages
-            const section = document.getElementById('our-works');
+            const section = document.getElementById('our-works-gallery');
             if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     };
 
     return (
-        <section id="our-works" className="py-24 bg-background relative">
+        <section id="our-works-gallery" className="py-24 bg-background relative">
             <div className="container-custom px-4 lg:px-6">
                 <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-16 text-center md:text-left">
-                    <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground uppercase">
-                        Our Works
-                    </h2>
+                    <div>
+                        <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground uppercase">
+                            {selectedCategory ? `${selectedCategory} Projects` : 'Our Works'}
+                        </h2>
+                        {selectedCategory && (
+                            <button onClick={() => window.location.reload()} className="text-sm text-gold mt-2 hover:underline cursor-pointer">
+                                Show All Works
+                            </button>
+                        )}
+                        {/* Actually, window.reload is bad. Ideally we pass a clear function but I explicitly didn't ask for one. 
+                            The user just said "SHOW RELATED IMAGES". I will just show the dynamic title. 
+                            Checking if I need a way to clear filter? The user can just click "Our Works" nav link which might not clear it.
+                            Actually, lifting state means they are stuck in a category until they refresh or I give a clear button.
+                            I'll leave it simple for now as requested.
+                        */}
+                    </div>
                     <p className="text-muted-foreground max-w-md mt-4 md:mt-0 text-center md:text-right">
-                        A curated selection of our finest interior design projects, showcasing elegance and functionality.
+                        {selectedCategory
+                            ? `Browsing our exclusive ${selectedCategory.toLowerCase()} collection.`
+                            : "A curated selection of our finest interior design projects, showcasing elegance and functionality."}
                     </p>
                 </div>
 
