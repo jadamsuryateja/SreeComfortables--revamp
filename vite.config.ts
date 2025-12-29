@@ -20,7 +20,7 @@ export default defineConfig(({ mode }) => ({
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom', 'react-router-dom'],
-          ui: ['@radix-ui/react-toast', '@radix-ui/react-tooltip', 'lucide-react', 'framer-motion'],
+          ui: ['@radix-ui/react-toast', '@radix-ui/react-tooltip', 'lucide-react'],
           animations: ['gsap']
         }
       }

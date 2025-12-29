@@ -14,10 +14,14 @@ const CTASection = () => {
   return (
     <section ref={containerRef} className="relative h-[80vh] flex items-center justify-center overflow-hidden">
       {/* Background with Parallax */}
-      <motion.div style={{ y }} className="absolute inset-0 z-0">
+      <motion.div
+        style={{ y }}
+        className="absolute inset-0 z-0 will-change-transform"
+      >
         <img
           src={project2}
           alt="Interior Design"
+          loading="lazy"
           className="w-full h-[120%] object-cover brightness-[0.4]"
         />
       </motion.div>

@@ -12,49 +12,60 @@ const HeroSection = () => {
   const imageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const tl = gsap.timeline();
+    let ctx: gsap.Context;
 
-    // Initial Loading Animation
-    tl.fromTo(imageRef.current,
-      { scale: 1.2 },
-      { scale: 1, duration: 1.5, ease: 'power2.out' }
-    )
-      .fromTo([text1Ref.current, text2Ref.current],
-        { y: 100, opacity: 0, skewY: 10 },
-        { y: 0, opacity: 1, skewY: 0, duration: 1, stagger: 0.2, ease: 'power3.out' },
-        '<'
-      );
+    // Defer animation to prioritize LCP
+    const timer = setTimeout(() => {
+      requestAnimationFrame(() => {
+        ctx = gsap.context(() => {
+          const tl = gsap.timeline();
 
-    // Scroll Parallax
-    if (containerRef.current) {
-      gsap.to(text1Ref.current, {
-        xPercent: -20,
-        scrollTrigger: {
-          trigger: containerRef.current,
-          scrub: 1,
-          start: 'top top',
-        }
+          // Initial Loading Animation
+          tl.fromTo(imageRef.current,
+            { scale: 1.2 },
+            { scale: 1, duration: 1.5, ease: 'power2.out' }
+          )
+            .fromTo([text1Ref.current, text2Ref.current],
+              { y: 100, opacity: 0, skewY: 10 },
+              { y: 0, opacity: 1, skewY: 0, duration: 1, stagger: 0.2, ease: 'power3.out' },
+              '<'
+            );
+
+          // Scroll Parallax
+          if (containerRef.current) {
+            gsap.to(text1Ref.current, {
+              xPercent: -20,
+              scrollTrigger: {
+                trigger: containerRef.current,
+                scrub: 1,
+                start: 'top top',
+              }
+            });
+            gsap.to(text2Ref.current, {
+              xPercent: 20,
+              scrollTrigger: {
+                trigger: containerRef.current,
+                scrub: 1,
+                start: 'top top',
+              }
+            });
+            gsap.to(imageRef.current, {
+              yPercent: 20,
+              scale: 1.1,
+              scrollTrigger: {
+                trigger: containerRef.current,
+                scrub: 1,
+                start: 'top top',
+              }
+            });
+          }
+        }, containerRef);
       });
-      gsap.to(text2Ref.current, {
-        xPercent: 20,
-        scrollTrigger: {
-          trigger: containerRef.current,
-          scrub: 1,
-          start: 'top top',
-        }
-      });
-      gsap.to(imageRef.current, {
-        yPercent: 20,
-        scale: 1.1,
-        scrollTrigger: {
-          trigger: containerRef.current,
-          scrub: 1,
-          start: 'top top',
-        }
-      });
-    }
+    }, 100); // Small delay to allow main thread to clear LCP
 
     return () => {
+      clearTimeout(timer);
+      if (ctx) ctx.revert();
       ScrollTrigger.getAll().forEach(t => t.kill());
     };
   }, []);
