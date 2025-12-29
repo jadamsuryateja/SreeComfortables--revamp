@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
-import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Instagram } from 'lucide-react';
 
 const navLinks = [
   { name: 'Home', href: '#home' },
@@ -114,6 +114,17 @@ const Navbar = () => {
                 </div>
               </a>
             ))}
+
+            {/* Instagram Badge */}
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 bg-wood-darkest text-white border border-wood-medium/20 hover:bg-wood-dark shadow-md hover:shadow-lg"
+            >
+              <Instagram size={18} />
+              <span className="text-xs font-bold uppercase tracking-widest">Follow Us</span>
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -140,7 +151,7 @@ const Navbar = () => {
             {/* Dark Overlay for Readability */}
             <div className="absolute inset-0 bg-black/70" />
 
-            <div className="relative z-10 flex flex-col gap-6 text-center">
+            <div className="relative z-10 flex flex-col gap-6 text-center items-center">
               {navLinks.map((link, index) => (
                 <motion.a
                   key={link.name}
@@ -153,15 +164,28 @@ const Navbar = () => {
                     e.preventDefault();
                     scrollToSection(link.href);
                   }}
-                  className="font-display text-4xl font-medium text-white hover:text-gold transition-colors flex items-center gap-4 group"
+                  className="font-display text-4xl font-medium text-white hover:text-gold transition-colors relative flex items-center justify-center group"
                 >
                   {link.name}
                   <ArrowUpRight
-                    className="opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-gold"
+                    className="absolute left-full ml-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-gold"
                     size={32}
                   />
                 </motion.a>
               ))}
+
+              <motion.a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.5 }}
+                className="mt-8 flex items-center gap-3 px-6 py-3 rounded-full bg-wood-darkest text-white border border-wood-medium/20 hover:bg-wood-dark transition-all duration-300 shadow-md hover:shadow-lg"
+              >
+                <Instagram size={20} />
+                <span className="text-sm font-bold uppercase tracking-widest">Follow Us</span>
+              </motion.a>
             </div>
           </motion.div>
         )}

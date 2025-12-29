@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X } from 'lucide-react';
 import { Skeleton } from "@/components/ui/skeleton";
 
 const works = [
@@ -179,31 +179,13 @@ const TestimonialsSection = () => {
     isHovered.current = false;
   };
 
-  const scrollLeftButton = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -400, behavior: 'smooth' });
-    }
-  };
 
-  const scrollRightButton = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 400, behavior: 'smooth' });
-    }
-  };
 
   return (
     <section id="testimonials" className="py-24 bg-background relative">
       <div className="container-custom px-4 mb-12 flex justify-between items-end">
         <div>
           <h2 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground uppercase">Capabilities <br /> Our Expertise</h2>
-        </div>
-        <div className="hidden md:flex gap-4">
-          <button onClick={scrollLeftButton} className="p-3 rounded-full border border-wood-darkest text-wood-darkest hover:bg-wood-darkest hover:text-white transition-colors z-10">
-            <ChevronLeft size={24} />
-          </button>
-          <button onClick={scrollRightButton} className="p-3 rounded-full border border-wood-darkest text-wood-darkest hover:bg-wood-darkest hover:text-white transition-colors z-10">
-            <ChevronRight size={24} />
-          </button>
         </div>
       </div>
 

@@ -71,7 +71,8 @@ const HeroSection = () => {
           <img
             src="/hero-1.webp"
             alt="Interior Design"
-            fetchPriority="high"
+            // @ts-ignore
+            fetchpriority="high"
             className="w-full h-full object-cover opacity-90" // High opacity for that bright look
           />
           {/* Subtle white gradient overlay to ensure text readability if needed, matches reference 'bright' look */}

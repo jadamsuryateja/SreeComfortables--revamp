@@ -23,7 +23,7 @@ const Index = () => {
         <AboutSection />
         <TestimonialsSection />
         <CollectionsSection onCategorySelect={setSelectedCategory} />
-        <OurWorksSection selectedCategory={selectedCategory} />
+        <OurWorksSection selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
         <CTASection />
         <ContactSection />
         <Footer />
