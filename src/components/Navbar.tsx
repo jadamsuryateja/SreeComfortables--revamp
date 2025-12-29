@@ -119,7 +119,7 @@ const Navbar = () => {
 
             {/* Instagram Badge */}
             <a
-              href="https://instagram.com"
+              href="https://www.instagram.com/sree_comfortables"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 bg-wood-darkest text-white border border-wood-medium/20 hover:bg-wood-dark shadow-md hover:shadow-lg"
@@ -170,7 +170,7 @@ const Navbar = () => {
           ))}
 
           <a
-            href="https://instagram.com"
+            href="https://www.instagram.com/sree_comfortables"
             target="_blank"
             rel="noopener noreferrer"
             style={{ transitionDelay: '500ms' }}
