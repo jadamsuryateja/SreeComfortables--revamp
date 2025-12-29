@@ -73,6 +73,7 @@ const HeroSection = () => {
             alt="Interior Design"
             // @ts-ignore
             fetchpriority="high"
+            loading="eager"
             className="w-full h-full object-cover opacity-90" // High opacity for that bright look
           />
           {/* Subtle white gradient overlay to ensure text readability if needed, matches reference 'bright' look */}

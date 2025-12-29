@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
-import { Menu, X, ArrowUpRight, Instagram } from 'lucide-react';
+import Menu from 'lucide-react/dist/esm/icons/menu';
+import X from 'lucide-react/dist/esm/icons/x';
+import ArrowUpRight from 'lucide-react/dist/esm/icons/arrow-up-right';
+import Instagram from 'lucide-react/dist/esm/icons/instagram';
 
 const navLinks = [
   { name: 'Home', href: '#home' },

@@ -1,56 +1,56 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import X from 'lucide-react/dist/esm/icons/x';
 import { Skeleton } from "@/components/ui/skeleton";
 
 const works = [
   // Office
-  { id: 1, title: 'Office Space', image: '/office/20200104-DSC09999.jpg' },
-  { id: 2, title: 'Glass Partition', image: '/office/Cabin Front Door Glass Partition.JPG' },
-  { id: 3, title: 'Cabin Interior', image: '/office/Cabin Fur View.JPG' },
-  { id: 4, title: 'Workstation', image: '/office/Part Photo.JPG' },
-  { id: 5, title: 'Cabin Overview', image: '/office/View Cabins from WS.JPG' },
+  { id: 1, title: 'Office Space', image: '/office/20200104-DSC09999.webp' },
+  { id: 2, title: 'Glass Partition', image: '/office/Cabin Front Door Glass Partition.webp' },
+  { id: 3, title: 'Cabin Interior', image: '/office/Cabin Fur View.webp' },
+  { id: 4, title: 'Workstation', image: '/office/Part Photo.webp' },
+  { id: 5, title: 'Cabin Overview', image: '/office/View Cabins from WS.webp' },
   // Residential
-  { id: 6, title: 'Modern Interior', image: '/residential/0ee8a67a-8027-4ea2-8320-39c1e7df91ad.jpg' },
-  { id: 7, title: 'Elegant Living', image: '/residential/1aa2fd21-6799-4925-bf34-7c0787f153ce.jpg' },
-  { id: 8, title: 'Cozy Space', image: '/residential/1b565e6e-8021-4ad7-bf5a-f1bbd9fd529b.jpg' },
-  { id: 9, title: 'Dining Room', image: '/residential/3a2cf365-dfd2-4dde-b374-eb43779f979c.jpg' },
-  { id: 10, title: 'Luxury Bedroom', image: '/residential/07c200ff-452f-4860-b832-53b232458acc.jpg' },
-  { id: 11, title: 'Spacious Hall', image: '/residential/40b59b8a-bddd-4a28-9c25-51fe0b5e8048.jpg' },
-  { id: 12, title: 'Contemporary', image: '/residential/58f1751e-21ca-4f67-ab19-a10b1d1a93e8.jpg' },
-  { id: 13, title: 'Family Room', image: '/residential/939d61de-6aee-4a2e-8ff3-30d0055bda9b.jpg' },
-  { id: 14, title: 'Bedroom Decor', image: '/residential/aa4a3fc9-24b4-4d97-9b4a-47dd0e4fc02b.jpg' },
-  { id: 15, title: 'Balcony', image: '/residential/BALCONY.JPG' },
-  { id: 16, title: 'Kitchen Detail', image: '/residential/c1956e6e-13af-4241-a216-e0af81e0dab3.jpg' },
-  { id: 17, title: 'Interior Art', image: '/residential/c97778ba-ff35-48ba-9922-a681f25ce617.jpg' },
-  { id: 18, title: 'Project View', image: '/residential/Capture.JPG-1.JPG' },
-  { id: 19, title: 'Classic Style', image: '/residential/Capture.JPG-2.JPG' },
-  { id: 20, title: 'Modern Vibes', image: '/residential/Capture.JPG-3.JPG' },
+  { id: 6, title: 'Modern Interior', image: '/residential/0ee8a67a-8027-4ea2-8320-39c1e7df91ad.webp' },
+  { id: 7, title: 'Elegant Living', image: '/residential/1aa2fd21-6799-4925-bf34-7c0787f153ce.webp' },
+  { id: 8, title: 'Cozy Space', image: '/residential/1b565e6e-8021-4ad7-bf5a-f1bbd9fd529b.webp' },
+  { id: 9, title: 'Dining Room', image: '/residential/3a2cf365-dfd2-4dde-b374-eb43779f979c.webp' },
+  { id: 10, title: 'Luxury Bedroom', image: '/residential/07c200ff-452f-4860-b832-53b232458acc.webp' },
+  { id: 11, title: 'Spacious Hall', image: '/residential/40b59b8a-bddd-4a28-9c25-51fe0b5e8048.webp' },
+  { id: 12, title: 'Contemporary', image: '/residential/58f1751e-21ca-4f67-ab19-a10b1d1a93e8.webp' },
+  { id: 13, title: 'Family Room', image: '/residential/939d61de-6aee-4a2e-8ff3-30d0055bda9b.webp' },
+  { id: 14, title: 'Bedroom Decor', image: '/residential/aa4a3fc9-24b4-4d97-9b4a-47dd0e4fc02b.webp' },
+  { id: 15, title: 'Balcony', image: '/residential/BALCONY.webp' },
+  { id: 16, title: 'Kitchen Detail', image: '/residential/c1956e6e-13af-4241-a216-e0af81e0dab3.webp' },
+  { id: 17, title: 'Interior Art', image: '/residential/c97778ba-ff35-48ba-9922-a681f25ce617.webp' },
+  { id: 18, title: 'Project View', image: '/residential/Capture.JPG-1.webp' },
+  { id: 19, title: 'Classic Style', image: '/residential/Capture.JPG-2.webp' },
+  { id: 20, title: 'Modern Vibes', image: '/residential/Capture.JPG-3.webp' },
 ];
 
 const works2 = [
-  { id: 21, title: 'Elegant Vibe', image: '/residential/Capture.JPG-4.JPG' },
-  { id: 22, title: 'Project Shot', image: '/residential/Capture.JPG-5.JPG' },
-  { id: 23, title: 'Luxury Finish', image: '/residential/f97c5a28-b5a2-4c20-a442-3772ee82173e.jpg' },
-  { id: 24, title: 'Guest Bedroom', image: '/residential/FIRST FLOOR 2 ND BEDROOM.JPG' },
-  { id: 25, title: 'Drawing Room', image: '/residential/GROND FLOOR DRAWING ROOM.JPG' },
-  { id: 26, title: 'Ground Bedroom', image: '/residential/GROUND FLOOR BEDROOM.JPG' },
-  { id: 27, title: 'Kitchen Space', image: '/residential/IMG_4252.JPG' },
-  { id: 28, title: 'Kitchen Cabinets', image: '/residential/IMG_4260.JPG' },
-  { id: 29, title: 'Modern Kitchen', image: '/residential/IMG_4261.JPG' },
-  { id: 30, title: 'Kitchen Corner', image: '/residential/IMG_4264.JPG' },
-  { id: 31, title: 'Storage Solution', image: '/residential/IMG_4265.JPG' },
-  { id: 32, title: 'Kitchen Setup', image: '/residential/IMG_4267.JPG' },
-  { id: 33, title: 'Living Comfort', image: '/residential/IMG_4270.JPG' },
-  { id: 34, title: 'Room Design', image: '/residential/IMG_4271.JPG' },
-  { id: 35, title: 'Interior View', image: '/residential/IMG_4273.JPG' },
-  { id: 36, title: 'Cozy Corner', image: '/residential/IMG_4274.JPG' },
-  { id: 37, title: 'Wall Decor', image: '/residential/IMG_4276.JPG' },
-  { id: 38, title: 'Room Setup', image: '/residential/IMG_4277.JPG' },
-  { id: 39, title: 'Kitchen View', image: '/residential/KITCHEN -2.JPG' },
-  { id: 40, title: 'Kitchen V3', image: '/residential/KITCHEN V.JPG' },
-  { id: 41, title: 'Living Dining', image: '/residential/LIVING AND DINNING.JPG' },
-  { id: 42, title: 'Master Bed', image: '/residential/MASTER BEDROOM.JPG' },
+  { id: 21, title: 'Elegant Vibe', image: '/residential/Capture.JPG-4.webp' },
+  { id: 22, title: 'Project Shot', image: '/residential/Capture.JPG-5.webp' },
+  { id: 23, title: 'Luxury Finish', image: '/residential/f97c5a28-b5a2-4c20-a442-3772ee82173e.webp' },
+  { id: 24, title: 'Guest Bedroom', image: '/residential/FIRST FLOOR 2 ND BEDROOM.webp' },
+  { id: 25, title: 'Drawing Room', image: '/residential/GROND FLOOR DRAWING ROOM.webp' },
+  { id: 26, title: 'Ground Bedroom', image: '/residential/GROUND FLOOR BEDROOM.webp' },
+  { id: 27, title: 'Kitchen Space', image: '/residential/IMG_4252.webp' },
+  { id: 28, title: 'Kitchen Cabinets', image: '/residential/IMG_4260.webp' },
+  { id: 29, title: 'Modern Kitchen', image: '/residential/IMG_4261.webp' },
+  { id: 30, title: 'Kitchen Corner', image: '/residential/IMG_4264.webp' },
+  { id: 31, title: 'Storage Solution', image: '/residential/IMG_4265.webp' },
+  { id: 32, title: 'Kitchen Setup', image: '/residential/IMG_4267.webp' },
+  { id: 33, title: 'Living Comfort', image: '/residential/IMG_4270.webp' },
+  { id: 34, title: 'Room Design', image: '/residential/IMG_4271.webp' },
+  { id: 35, title: 'Interior View', image: '/residential/IMG_4273.webp' },
+  { id: 36, title: 'Cozy Corner', image: '/residential/IMG_4274.webp' },
+  { id: 37, title: 'Wall Decor', image: '/residential/IMG_4276.webp' },
+  { id: 38, title: 'Room Setup', image: '/residential/IMG_4277.webp' },
+  { id: 39, title: 'Kitchen View', image: '/residential/KITCHEN -2.webp' },
+  { id: 40, title: 'Kitchen V3', image: '/residential/KITCHEN V.webp' },
+  { id: 41, title: 'Living Dining', image: '/residential/LIVING AND DINNING.webp' },
+  { id: 42, title: 'Master Bed', image: '/residential/MASTER BEDROOM.webp' },
 ];
 
 // Duplicate list for infinite loop
@@ -95,26 +95,26 @@ const TestimonialsSection = () => {
   const isHovered = useRef(false);
   const scrollSpeed = 0.5; // Pixels per frame
 
+  // Optimized animation loop to prevent forced reflows
   const animateScroll = useCallback(() => {
     if (!scrollContainerRef.current) return;
 
-    // Auto-scroll only if not interacting
+    // 1. Read Phase
+    let { scrollLeft, scrollWidth } = scrollContainerRef.current;
+
+    // 2. Calculation Phase
     if (!isDown.current && !isHovered.current) {
-      scrollContainerRef.current.scrollLeft += scrollSpeed;
+      scrollLeft += scrollSpeed;
     }
 
     // Infinite Loop Check
-    const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-
-    // If we've scrolled past the first set of items (approx halfway), reset to start
-    // We assume the duplicated list is roughly 50/50. 
-    // A safer check is if we are near the end.
     if (scrollLeft >= (scrollWidth / 2)) {
-      scrollContainerRef.current.scrollLeft = 0;
+      scrollLeft = 0;
     }
-    // If scrolling backwards (manual) and hit start
-    else if (scrollLeft <= 0) {
-      // scrollContainerRef.current.scrollLeft = scrollWidth / 2; // Optional: bi-directional infinite
+
+    // 3. Write Phase
+    if (scrollContainerRef.current.scrollLeft !== scrollLeft) {
+      scrollContainerRef.current.scrollLeft = scrollLeft;
     }
 
     animationRef.current = requestAnimationFrame(animateScroll);
