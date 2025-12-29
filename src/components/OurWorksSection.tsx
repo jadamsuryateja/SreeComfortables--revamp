@@ -1,11 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 
 const projects = [
-    // ... (projects array kept as is, but imports above changed)
-
     // Office Projects
     { id: 1, title: "Office Space", category: "Office", image: "/office/20200104-DSC09999.jpg" },
     { id: 2, title: "Glass Partition Cabin", category: "Office", image: "/office/Cabin Front Door Glass Partition.JPG" },
@@ -114,7 +112,9 @@ const ProjectCard = ({ project, index, setSelectedImage }: { project: any, index
 };
 
 const OurWorksSection = ({ selectedCategory, setSelectedCategory }: { selectedCategory: string | null, setSelectedCategory: (category: string | null) => void }) => {
+    const [currentPage, setCurrentPage] = useState(1);
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const itemsPerPage = 4;
 
     // Filter projects based on selected category
     const filteredProjects = projects.filter(project => {
@@ -122,6 +122,26 @@ const OurWorksSection = ({ selectedCategory, setSelectedCategory }: { selectedCa
         const cat = selectedCategory.toUpperCase();
         return project.category.toUpperCase() === cat;
     });
+
+    // Reset to page 1 when category changes
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [selectedCategory]);
+
+    const totalPages = Math.ceil(filteredProjects.length / itemsPerPage);
+
+    const displayedProjects = filteredProjects.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    const handlePageChange = (newPage: number) => {
+        if (newPage >= 1 && newPage <= totalPages) {
+            setCurrentPage(newPage);
+            const section = document.getElementById('our-works-gallery');
+            if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    };
 
     return (
         <section id="our-works-gallery" className="py-24 bg-background relative">
@@ -136,12 +156,6 @@ const OurWorksSection = ({ selectedCategory, setSelectedCategory }: { selectedCa
                                 Show All Works
                             </button>
                         )}
-                        {/* Actually, window.reload is bad. Ideally we pass a clear function but I explicitly didn't ask for one. 
-                            The user just said "SHOW RELATED IMAGES". I will just show the dynamic title. 
-                            Checking if I need a way to clear filter? The user can just click "Our Works" nav link which might not clear it.
-                            Actually, lifting state means they are stuck in a category until they refresh or I give a clear button.
-                            I'll leave it simple for now as requested.
-                        */}
                     </div>
                     <p className="text-muted-foreground max-w-md mt-4 md:mt-0 text-center md:text-right">
                         {selectedCategory
@@ -151,7 +165,7 @@ const OurWorksSection = ({ selectedCategory, setSelectedCategory }: { selectedCa
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-                    {filteredProjects.map((project, index) => (
+                    {displayedProjects.map((project, index) => (
                         <ProjectCard
                             key={project.id}
                             project={project}
@@ -160,6 +174,33 @@ const OurWorksSection = ({ selectedCategory, setSelectedCategory }: { selectedCa
                         />
                     ))}
                 </div>
+
+                {/* Pagination Controls */}
+                {totalPages > 1 && (
+                    <div className="mt-16 flex justify-center items-center gap-4 md:gap-8">
+                        <button
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className={`flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 border border-wood-darkest rounded-full transition-all duration-300 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed text-wood-darkest' : 'text-wood-darkest hover:bg-wood-darkest hover:text-white'}`}
+                        >
+                            <ChevronLeft size={20} />
+                            <span className="uppercase tracking-widest text-sm font-bold hidden md:block">Previous</span>
+                        </button>
+
+                        <div className="font-display text-xl text-wood-darkest">
+                            <span className="font-bold">{currentPage}</span> / {totalPages}
+                        </div>
+
+                        <button
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className={`flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 border border-wood-darkest rounded-full transition-all duration-300 ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed text-wood-darkest' : 'text-wood-darkest hover:bg-wood-darkest hover:text-white'}`}
+                        >
+                            <span className="uppercase tracking-widest text-sm font-bold hidden md:block">Next</span>
+                            <ChevronRight size={20} />
+                        </button>
+                    </div>
+                )}
             </div>
 
             {/* Image Preview Modal */}
